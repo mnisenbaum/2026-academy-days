@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "cml-mcp": {
+      "command": "wsl",
+      "args": [
+        "bash",
+        "-c",
+        "CML_URL='https://10.10.14.121/' CML_USERNAME='admin' CML_PASSWORD='Cml2@123' CML_VERIFY_SSL='false' /home/moises/.local/bin/uvx 'cml-mcp[pyats]'"
+      ]
+    }
+  }
+}

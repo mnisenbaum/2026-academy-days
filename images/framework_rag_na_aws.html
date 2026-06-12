@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework RAG na AWS Cloud - Academy Days 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+        }
+        .font-code {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        /* Animação de fluxo de dados nas conexões */
+        @keyframes flow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+        .flow-line {
+            stroke-dasharray: 6, 4;
+            animation: flow 1.5s linear infinite;
+        }
+        /* Efeito de brilho pulsante nos nós ativos */
+        @keyframes glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-color)); }
+            50% { filter: drop-shadow(0 0 10px var(--glow-color)); }
+        }
+        .node-glow {
+            animation: glow-pulse 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500/10 text-amber-500 p-2.5 rounded-xl border border-amber-500/30">
+                    <i class="fa-brands fa-aws text-2xl"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-amber-500">Desenvolvimento Cloud & IA</span>
+                    <h1 class="text-xl font-bold text-white tracking-tight">RAG Corporativo na AWS Cloud</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-slate-400 bg-slate-900 px-4 py-2 rounded-lg border border-slate-800">
+                <i class="fa-solid fa-cloud text-amber-500"></i>
+                <span>Arquitetura de Referência: Amazon Bedrock</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
+        
+        <!-- Left Column: Interactive AWS Architecture Diagram (lg:col-span-6) -->
+        <div class="lg:col-span-6 flex flex-col bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-sm w-full">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-200">Arquitetura Serverless</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Explore os componentes clicando nos nós do fluxo</p>
+                </div>
+                <button onclick="triggerSimulation()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-play"></i> Simular Fluxo RAG
+                </button>
+            </div>
+
+            <!-- AWS SVG Diagram -->
+            <div class="relative w-full aspect-[4/3] bg-slate-950/40 rounded-2xl border border-slate-800 p-4 flex items-center justify-center">
+                <svg viewBox="0 0 600 450" class="w-full h-full select-none" id="aws-rag-svg">
+                    <!-- Definitions of Icons/Gradients -->
+                    <defs>
+                        <!-- AWS Colors Gradients -->
+                        <linearGradient id="orange-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff9900" />
+                            <stop offset="100%" stop-color="#e07e00" />
+                        </linearGradient>
+                        <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#a435f0" />
+                            <stop offset="100%" stop-color="#6900a8" />
+                        </linearGradient>
+                        <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00a1e0" />
+                            <stop offset="100%" stop-color="#006699" />
+                        </linearGradient>
+                        <linearGradient id="green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1d8102" />
+                            <stop offset="100%" stop-color="#114e01" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- CONNECTING LINES (Default: static, animated on simulation) -->
+                    <!-- Ingestion: S3 -> Lambda -> OpenSearch -->
+                    <path d="M 110 110 L 250 110" stroke="#475569" stroke-width="2" fill="none" id="line-s3-lambda" />
+                    <path d="M 250 110 L 410 160" stroke="#475569" stroke-width="2" fill="none" id="line-lambda-opensearch" />
+                    
+                    <!-- Query Process: User -> Lambda Orquestradora -->
+                    <path d="M 110 330 L 250 250" stroke="#475569" stroke-width="2" fill="none" id="line-user-lambda" />
+                    <!-- Lambda -> Vector Store (OpenSearch) -->
+                    <path d="M 310 250 L 410 210" stroke="#475569" stroke-width="2" fill="none" id="line-lambda-opensearch-query" />
+                    <!-- Lambda -> Bedrock (Embedding / LLM) -->
+                    <path d="M 310 250 L 440 330" stroke="#475569" stroke-width="2" fill="none" id="line-lambda-bedrock" />
+
+                    <!-- NODES GROUP -->
+                    
+                    <!-- 1. Node S3 (Fonte de Dados / Manuais Cisco) -->
+                    <g id="node-s3" class="cursor-pointer group" onclick="highlightService('s3')" style="--glow-color: #ff9900;">
+                        <rect x="50" y="70" width="80" height="80" rx="16" fill="url(#orange-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <i class="fa-solid fa-bucket text-white text-3xl" style="transform: translate(75px, 92px); pointer-events:none; position: absolute;"></i>
+                        <text x="90" y="170" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">Amazon S3</text>
+                        <text x="90" y="185" text-anchor="middle" fill="#ff9900" class="text-[9px] font-semibold uppercase">Dados Brutos</text>
+                    </g>
+
+                    <!-- 2. Node Lambda (ETL Parser / Embeddings Creator) -->
+                    <g id="node-lambda" class="cursor-pointer group" onclick="highlightService('lambda-etl')" style="--glow-color: #ff9900;">
+                        <rect x="210" y="70" width="80" height="80" rx="16" fill="url(#orange-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <!-- Lightning Bolt Icon -->
+                        <path d="M 255 85 L 235 115 L 250 115 L 245 135 L 265 105 L 250 105 Z" fill="#ffffff" />
+                        <text x="250" y="170" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">AWS Lambda</text>
+                        <text x="250" y="185" text-anchor="middle" fill="#ff9900" class="text-[9px] font-semibold uppercase">Ingestão / Chunk</text>
+                    </g>
+
+                    <!-- 3. Node OpenSearch Serverless (Banco Vetorial) -->
+                    <g id="node-opensearch" class="cursor-pointer group" onclick="highlightService('opensearch')" style="--glow-color: #00a1e0;">
+                        <rect x="390" y="150" width="90" height="90" rx="16" fill="url(#blue-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <i class="fa-solid fa-database text-white text-3xl" style="transform: translate(420px, 175px); pointer-events:none; position: absolute;"></i>
+                        <text x="435" y="260" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">OpenSearch</text>
+                        <text x="435" y="275" text-anchor="middle" fill="#00a1e0" class="text-[9px] font-semibold uppercase">Vector Store</text>
+                    </g>
+
+                    <!-- 4. Node Lambda Orquestradora (Python Runtime) -->
+                    <g id="node-lambda-orchestrator" class="cursor-pointer group" onclick="highlightService('lambda-orchestrator')" style="--glow-color: #ff9900;">
+                        <rect x="210" y="210" width="80" height="80" rx="16" fill="url(#orange-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <path d="M 255 225 L 235 255 L 250 255 L 245 275 L 265 245 L 250 245 Z" fill="#ffffff" />
+                        <text x="250" y="310" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">Orquestrador</text>
+                        <text x="250" y="325" text-anchor="middle" fill="#ff9900" class="text-[9px] font-semibold uppercase">Lambda Core</text>
+                    </g>
+
+                    <!-- 5. Node Amazon Bedrock (Modelos Fundacionais / Claude & Titan) -->
+                    <g id="node-bedrock" class="cursor-pointer group" onclick="highlightService('bedrock')" style="--glow-color: #a435f0;">
+                        <rect x="400" y="300" width="90" height="90" rx="16" fill="url(#purple-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <i class="fa-solid fa-brain text-white text-3xl" style="transform: translate(430px, 325px); pointer-events:none; position: absolute;"></i>
+                        <text x="445" y="410" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">Amazon Bedrock</text>
+                        <text x="445" y="425" text-anchor="middle" fill="#a435f0" class="text-[9px] font-semibold uppercase">Modelos de IA</text>
+                    </g>
+
+                    <!-- 6. Node User/Client (Engenheiro de Redes) -->
+                    <g id="node-user" class="cursor-pointer group" onclick="highlightService('client')" style="--glow-color: #1d8102;">
+                        <rect x="50" y="290" width="80" height="80" rx="16" fill="url(#green-grad)" class="transition-all duration-300 group-hover:opacity-90" />
+                        <i class="fa-solid fa-terminal text-white text-3xl" style="transform: translate(72px, 312px); pointer-events:none; position: absolute;"></i>
+                        <text x="90" y="390" text-anchor="middle" fill="#94a3b8" class="text-[11px] font-bold tracking-wider">Cliente / API</text>
+                        <text x="90" y="405" text-anchor="middle" fill="#1d8102" class="text-[9px] font-semibold uppercase">Eng. de Redes</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- AWS Architectural Phases Selector -->
+            <div class="grid grid-cols-2 gap-3 mt-6">
+                <button onclick="filterPhase('etl')" id="btn-phase-etl" class="px-4 py-3 bg-slate-800 border border-slate-700 hover:border-amber-500/50 rounded-xl text-left transition-all">
+                    <span class="text-[10px] uppercase font-bold text-amber-500 block mb-1">Fluxo A</span>
+                    <span class="text-xs font-bold text-slate-100 block">1. Ingestão Vetorial (ETL)</span>
+                    <span class="text-[11px] text-slate-400 mt-1 block">Processa PDFs de manuais, faz o chunking e salva vetores na nuvem.</span>
+                </button>
+                <button onclick="filterPhase('query')" id="btn-phase-query" class="px-4 py-3 bg-slate-800 border border-slate-700 hover:border-cyan-500/50 rounded-xl text-left transition-all">
+                    <span class="text-[10px] uppercase font-bold text-cyan-400 block mb-1">Fluxo B</span>
+                    <span class="text-xs font-bold text-slate-100 block">2. Consulta & Geração</span>
+                    <span class="text-[11px] text-slate-400 mt-1 block">Orquestra a busca de rede, injeta contexto e gera código via Bedrock.</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Column: Details, Code and Didactics (lg:col-span-6) -->
+        <div class="lg:col-span-6 flex flex-col gap-6 w-full">
+            
+            <!-- Component Info Panel -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden transition-all duration-300 min-h-[340px] flex flex-col justify-between">
+                
+                <!-- Dynamic Glow Background -->
+                <div id="service-glow" class="absolute -right-24 -top-24 w-60 h-60 rounded-full bg-amber-500/10 blur-[80px] pointer-events-none transition-all duration-500"></div>
+
+                <div>
+                    <!-- Header of card -->
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="service-tag" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                            Amazon Web Services
+                        </span>
+                        <div class="text-xs text-slate-500 font-mono" id="service-aws-name">
+                            AWS::S3::Bucket
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 id="service-title" class="text-2xl font-extrabold text-white tracking-tight">
+                        Amazon S3 (Simple Storage Service)
+                    </h3>
+                    <p id="service-desc" class="text-slate-400 text-xs mt-2 leading-relaxed">
+                        É o ponto de partida do RAG. Funciona como o repositório central altamente resiliente e seguro para todos os seus PDFs de topologias de rede, documentações da Cisco (manuais IOS-XE), e dumps de logs gerados no Cisco Modeling Labs (CML2).
+                    </p>
+
+                    <!-- Technical Bullet Points -->
+                    <div class="mt-4 space-y-2" id="service-bullets">
+                        <div class="flex items-center gap-2 text-xs text-slate-300">
+                            <i class="fa-solid fa-shield text-amber-500/80 w-4 text-center"></i>
+                            <span>Segurança estrita com IAM e criptografia em repouso (KMS).</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-slate-300">
+                            <i class="fa-solid fa-arrows-spin text-amber-500/80 w-4 text-center"></i>
+                            <span>Aciona notificações imediatas via S3 Event Notifications para novos arquivos.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher Pedagogical Hack -->
+                <div id="service-pedagogy" class="mt-6 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs text-amber-300 flex gap-3 items-start">
+                    <i class="fa-solid fa-chalkboard-user text-base text-amber-500 mt-0.5"></i>
+                    <div>
+                        <strong class="block mb-0.5 text-amber-400">Didática em Redes:</strong>
+                        <span id="service-pedagogy-text">Diga aos alunos para pensarem no S3 como a 'biblioteca física' onde todos os manuais técnicos do fabricante de rede são guardados antes de serem catalogados digitalmente.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AWS Hands-on Code Snippet (Boto3 Python) -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-code text-amber-500"></i>
+                        Como programar isso? (Python Boto3)
+                    </h4>
+                    <span class="text-[10px] text-slate-500 font-mono">AWS SDK for Python</span>
+                </div>
+
+                <!-- Code Block Area -->
+                <div class="relative">
+                    <pre class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-[11px] font-code text-emerald-400 overflow-x-auto leading-relaxed max-h-[220px]" id="python-code-box">
+import boto3
+
+# Inicializa o cliente do Bedrock Agent Runtime
+bedrock_client = boto3.client(
+    service_name='bedrock-agent-runtime',
+    region_name='us-east-1'
+)
+
+def consultar_rag_aws(pergunta, kb_id):
+    # Faz a busca vetorial (Retrieval) e gera resposta (Generation) usando Bedrock
+    resposta = bedrock_client.retrieve_and_generate(
+        input={'text': pergunta},
+        retrieveAndGenerateConfiguration={
+            'type': 'KNOWLEDGE_BASE',
+            'knowledgeBaseConfiguration': {
+                'knowledgeBaseId': kb_id,
+                'modelArn': 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-v1:0'
+            }
+        }
+    )
+    return resposta['output']['text']
+
+# Pergunta técnica do aluno do Academy Days
+pergunta = "Como configuro a interface do R1 para RESTCONF?"
+kb_id = "AWS-KB-CML-WORKSHOP" # ID da base indexada
+resultado = consultar_rag_aws(pergunta, kb_id)
+print(f"Resposta Gerada pela IA:\n{resultado}")</pre>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/80 px-6 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <p>© 2026 Cisco Academy Days - RAG na Nuvem com AWS.</p>
+            <div class="flex gap-4">
+                <span class="text-slate-400">AWS Cloud Architecture</span>
+                <span>|</span>
+                <span class="text-slate-400">"Aprendizado Invertido"</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JS Script -->
+    <script>
+        // Database of AWS components
+        const awsServices = {
+            s3: {
+                title: "Amazon S3 (Simple Storage Service)",
+                awsName: "AWS::S3::Bucket",
+                tag: "Fonte de Conhecimento",
+                color: "#ff9900",
+                glow: "rgba(255, 153, 0, 0.2)",
+                desc: "É o ponto de partida do RAG. Funciona como o repositório central altamente seguro para todos os seus PDFs de topologias de rede, documentações da Cisco (manuais IOS-XE), e logs brutos gerados nos labs do Cisco Modeling Labs (CML2).",
+                bullets: [
+                    { icon: "fa-shield", text: "Proteção de dados críticos de engenharia com IAM e criptografia robusta (KMS)." },
+                    { icon: "fa-arrows-spin", text: "Suporta upload automático de scripts de backup gerados via Netmiko." }
+                ],
+                pedagogy: "Diga aos alunos para pensarem no S3 como a 'biblioteca física' onde todos os manuais técnicos originais e novos são armazenados antes de qualquer leitura ou organização."
+            },
+            "lambda-etl": {
+                title: "AWS Lambda (ETL Vector Pipeline)",
+                awsName: "AWS::Lambda::Function",
+                tag: "Automação / Processamento",
+                color: "#ff9900",
+                glow: "rgba(255, 153, 0, 0.2)",
+                desc: "Esta função Serverless processa arquivos à medida que entram no S3. Ela divide textos grandes em pedaços (Chunks), chama o modelo de embeddings (ex: Amazon Titan Multimodal Embeddings) e insere as representações vetoriais no banco de dados.",
+                bullets: [
+                    { icon: "fa-scissors", text: "Chunking Inteligente: Quebra arquivos de rede respeitando parágrafos e comandos de configuração." },
+                    { icon: "fa-code-branch", text: "Acionamento automatizado por eventos S3, eliminando servidores ligados 24/7." }
+                ],
+                pedagogy: "O Lambda funciona como um 'tradutor de livros'. Ele pega manuais longos da Cisco, recorta em parágrafos de tamanho fácil de ler (chunks) e converte as frases para números (vetores)."
+            },
+            opensearch: {
+                title: "Amazon OpenSearch Serverless",
+                awsName: "AWS::OpenSearchServerless::Collection",
+                tag: "Banco Vetorial (Vector DB)",
+                color: "#00a1e0",
+                glow: "rgba(0, 161, 224, 0.2)",
+                desc: "Banco de dados vetorial de alta performance para armazenamento sem servidor. Ele guarda os vetores gerados pelo AWS Lambda e executa buscas de vizinhos mais próximos (KNN) em altíssima velocidade quando uma pergunta é feita pelo cliente de rede.",
+                bullets: [
+                    { icon: "fa-bolt", text: "Suporte nativo para buscas híbridas (busca de palavras-chave clássica + busca vetorial semântica)." },
+                    { icon: "fa-infinity", text: "Escalabilidade Serverless: Se adapta dinamicamente sem necessidade de gerenciar instâncias." }
+                ],
+                pedagogy: "Explique que o OpenSearch é o 'índice digital super-rápido' da biblioteca. Ele não lê o livro inteiro: ele sabe exatamente em qual prateleira e página está o comando que o aluno precisa configurar."
+            },
+            "lambda-orchestrator": {
+                title: "AWS Lambda (Orquestradora / Core API)",
+                awsName: "AWS::Lambda::Function",
+                tag: "Backend & Orquestração",
+                color: "#ff9900",
+                glow: "rgba(255, 153, 0, 0.2)",
+                desc: "Esta função centraliza o backend da sua aplicação de RAG. Ela recebe a requisição HTTP vinda de um assistente de redes (Claude Desktop / MCP ou bot do Webex), gerencia as chamadas de busca vetorial no OpenSearch e coordena a montagem do prompt final.",
+                bullets: [
+                    { icon: "fa-brain", text: "Pode executar bibliotecas de orquestração populares como LangChain e LlamaIndex." },
+                    { icon: "fa-network-wired", text: "Conecta-se com segurança aos agentes de IA e SDKs de automação de rede (CML2 SDK)." }
+                ],
+                pedagogy: "A Lambda Orquestradora é o 'Cérebro Operacional'. Ela recebe a pergunta do aluno, vai correndo até o índice de dados buscar as referências corretas, e depois monta a lição para enviar à IA Generativa."
+            },
+            bedrock: {
+                title: "Amazon Bedrock (Modelos de IA / LLMs)",
+                awsName: "AWS::Bedrock::FoundationModel",
+                tag: "IA Generativa Serverless",
+                color: "#a435f0",
+                glow: "rgba(164, 53, 240, 0.2)",
+                desc: "Serviço totalmente gerenciado que disponibiliza os principais modelos de fundação do mercado (como Claude 3.5 Sonnet, Llama 3 e Amazon Titan) por meio de uma API segura e escalável.",
+                bullets: [
+                    { icon: "fa-user-lock", text: "Segurança de dados de ponta: Seus manuais e prompts NUNCA são usados para treinar os modelos públicos." },
+                    { icon: "fa-wand-magic-sparkles", text: "Raciocínio complexo para traduzir requisições de linguagem natural em comandos estruturados de redes." }
+                ],
+                pedagogy: "O Amazon Bedrock é o 'Grande Professor Especialista' que lê as referências trazidas pelo orquestrador e cria uma aula ou script 100% correto e formatado para o aluno."
+            },
+            client: {
+                title: "Cliente / API (Engenheiro de Redes)",
+                awsName: "Client::Terminal-Web",
+                tag: "Ponto de Interação",
+                color: "#1d8102",
+                glow: "rgba(29, 129, 2, 0.2)",
+                desc: "A ponta final da automação. Pode ser um terminal no VS Code de um engenheiro de redes do Academy Days, uma aplicação no Claude Desktop conectada com MCP ou uma requisição via terminal enviando comandos RESTCONF.",
+                bullets: [
+                    { icon: "fa-terminal", text: "Consome a API de RAG para validar sintaxe de configurações em roteadores reais no CML2." },
+                    { icon: "fa-laptop-code", text: "Recebe respostas estruturadas em JSON prontas para serem enviadas via interfaces automatizadas." }
+                ],
+                pedagogy: "O Cliente é o nosso aluno ou engenheiro operacional. Ele quer resolver problemas reais da rede de forma produtiva, consultando e automatizando sem precisar revirar manuais estáticos de 2000 páginas."
+            }
+        };
+
+        // Active State
+        let selectedService = 's3';
+
+        // Highlighting AWS Service Detail Card
+        function highlightService(key) {
+            selectedService = key;
+            const data = awsServices[key];
+
+            // Update SVG elements glow styling
+            const nodes = ['s3', 'lambda-etl', 'opensearch', 'lambda-orchestrator', 'bedrock', 'client'];
+            nodes.forEach(n => {
+                const svgNode = document.getElementById(`node-${n === 'lambda-etl' ? 'lambda' : n === 'lambda-orchestrator' ? 'lambda-orchestrator' : n}`);
+                if (svgNode) {
+                    if (n === key) {
+                        svgNode.setAttribute('class', 'cursor-pointer group node-glow');
+                        svgNode.firstElementChild.setAttribute('stroke', '#ffffff');
+                        svgNode.firstElementChild.setAttribute('stroke-width', '2.5');
+                    } else {
+                        svgNode.setAttribute('class', 'cursor-pointer group');
+                        svgNode.firstElementChild.removeAttribute('stroke');
+                        svgNode.firstElementChild.removeAttribute('stroke-width');
+                    }
+                }
+            });
+
+            // Update details panel
+            const panelTitle = document.getElementById('service-title');
+            const panelDesc = document.getElementById('service-desc');
+            const panelTag = document.getElementById('service-tag');
+            const panelAwsName = document.getElementById('service-aws-name');
+            const panelBullets = document.getElementById('service-bullets');
+            const panelPedagogy = document.getElementById('service-pedagogy-text');
+            const panelGlow = document.getElementById('service-glow');
+            const panelPedagogyBox = document.getElementById('service-pedagogy');
+
+            // Set color styles depending on AWS service theme
+            let themeColor = data.color;
+            panelTag.style.color = themeColor;
+            panelTag.style.borderColor = themeColor + '30';
+            panelTag.style.backgroundColor = themeColor + '10';
+            panelTag.innerText = data.tag;
+            panelGlow.style.backgroundColor = themeColor + '15';
+
+            panelTitle.innerText = data.title;
+            panelAwsName.innerText = data.awsName;
+            panelDesc.innerText = data.desc;
+            panelPedagogy.innerText = data.pedagogy;
+
+            // Render Bullets
+            panelBullets.innerHTML = data.bullets.map(b => `
+                <div class="flex items-center gap-2.5 text-xs text-slate-300">
+                    <i class="fa-solid ${b.icon} w-4 text-center" style="color: ${themeColor};"></i>
+                    <span>${b.text}</span>
+                </div>
+            `).join('');
+
+            // Transition animations
+            panelPedagogyBox.style.borderColor = themeColor + '30';
+            panelPedagogyBox.style.backgroundColor = themeColor + '05';
+            panelPedagogyBox.querySelector('i').style.color = themeColor;
+        }
+
+        // Change the flow line views to show/isolate paths
+        function filterPhase(phase) {
+            const btnEtl = document.getElementById('btn-phase-etl');
+            const btnQuery = document.getElementById('btn-phase-query');
+
+            // SVG Connection Lines
+            const lineS3Lambda = document.getElementById('line-s3-lambda');
+            const lineLambdaOpenSearch = document.getElementById('line-lambda-opensearch');
+            const lineUserLambda = document.getElementById('line-user-lambda');
+            const lineLambdaOpenSearchQuery = document.getElementById('line-lambda-opensearch-query');
+            const lineLambdaBedrock = document.getElementById('line-lambda-bedrock');
+
+            if (phase === 'etl') {
+                // Style Active Button
+                btnEtl.className = "px-4 py-3 bg-amber-500/10 border border-amber-500 rounded-xl text-left transition-all shadow-[0_0_12px_rgba(255,153,0,0.15)]";
+                btnQuery.className = "px-4 py-3 bg-slate-800 border border-slate-700 hover:border-cyan-500/50 rounded-xl text-left transition-all";
+
+                // Highlight Ingestion flow in SVG
+                lineS3Lambda.setAttribute('stroke', '#ff9900');
+                lineS3Lambda.setAttribute('class', 'flow-line');
+                lineLambdaOpenSearch.setAttribute('stroke', '#ff9900');
+                lineLambdaOpenSearch.setAttribute('class', 'flow-line');
+
+                // Fade query flow lines
+                lineUserLambda.setAttribute('stroke', '#1e293b');
+                lineUserLambda.removeAttribute('class');
+                lineLambdaOpenSearchQuery.setAttribute('stroke', '#1e293b');
+                lineLambdaOpenSearchQuery.removeAttribute('class');
+                lineLambdaBedrock.setAttribute('stroke', '#1e293b');
+                lineLambdaBedrock.removeAttribute('class');
+
+                highlightService('s3');
+            } else {
+                // Style Active Button
+                btnQuery.className = "px-4 py-3 bg-cyan-500/10 border border-cyan-500 rounded-xl text-left transition-all shadow-[0_0_12px_rgba(6,182,212,0.15)]";
+                btnEtl.className = "px-4 py-3 bg-slate-800 border border-slate-700 hover:border-amber-500/50 rounded-xl text-left transition-all";
+
+                // Fade ETL lines
+                lineS3Lambda.setAttribute('stroke', '#1e293b');
+                lineS3Lambda.removeAttribute('class');
+                lineLambdaOpenSearch.setAttribute('stroke', '#1e293b');
+                lineLambdaOpenSearch.removeAttribute('class');
+
+                // Highlight Query Flow
+                lineUserLambda.setAttribute('stroke', '#1d8102');
+                lineUserLambda.setAttribute('class', 'flow-line');
+                lineLambdaOpenSearchQuery.setAttribute('stroke', '#00a1e0');
+                lineLambdaOpenSearchQuery.setAttribute('class', 'flow-line');
+                lineLambdaBedrock.setAttribute('stroke', '#a435f0');
+                lineLambdaBedrock.setAttribute('class', 'flow-line');
+
+                highlightService('client');
+            }
+        }
+
+        // Trigger dynamic AWS simulation
+        function triggerSimulation() {
+            // First run Ingestion pipeline
+            filterPhase('etl');
+            
+            setTimeout(() => {
+                // Automatically switch to client query/generation pipeline
+                filterPhase('query');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            highlightService('s3');
+        }
+    </script>
+</body>
+</html>

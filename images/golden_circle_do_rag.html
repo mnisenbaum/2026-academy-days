@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Circle do RAG - IA aplicada a Redes</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons para enriquecer os detalhes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1329;
+        }
+        /* Custom scrollbar para estética premium */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1329;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1c2541;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3a506b;
+        }
+        /* Animação de pulsação suave nos círculos */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.015); opacity: 1; }
+        }
+        .pulse-active {
+            animation: subtle-pulse 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600/20 text-indigo-400 p-2.5 rounded-xl border border-indigo-500/30">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Workshop Academy Days 2026</span>
+                    <h1 class="text-xl font-bold text-white tracking-tight">O Golden Circle do RAG</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-slate-400 bg-slate-950 px-4 py-2 rounded-lg border border-slate-800">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>Inovação Didática: Redes + IA Generativa</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
+        
+        <!-- Left Side: Interactive SVG Golden Circle (Col 12 to Col 5) -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center bg-slate-900/40 p-6 rounded-3xl border border-slate-800/80 shadow-2xl backdrop-blur-sm w-full">
+            <div class="text-center mb-6">
+                <h2 class="text-lg font-semibold text-slate-300">Comece pelo Porquê (Simon Sinek)</h2>
+                <p class="text-xs text-slate-400 mt-1">Clique nas camadas ou labels para explorar a metodologia</p>
+            </div>
+
+            <!-- Interactive SVG Container -->
+            <div class="relative w-full max-w-[420px] aspect-square flex items-center justify-center">
+                <svg viewBox="0 0 400 400" class="w-full h-full select-none" id="golden-circle-svg">
+                    <defs>
+                        <!-- Glow Filters -->
+                        <filter id="glow-why" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="8" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <filter id="glow-how" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="6" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <filter id="glow-what" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <!-- Gradients -->
+                        <radialGradient id="grad-why" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9"/>
+                            <stop offset="100%" stop-color="#b45309" stop-opacity="0.9"/>
+                        </radialGradient>
+                        <radialGradient id="grad-how" cx="50%" cy="50%" r="50%">
+                            <stop offset="60%" stop-color="#0e7490" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.65"/>
+                        </radialGradient>
+                        <radialGradient id="grad-what" cx="50%" cy="50%" r="50%">
+                            <stop offset="75%" stop-color="#1e1b4b" stop-opacity="0.1"/>
+                            <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.5"/>
+                        </radialGradient>
+                    </defs>
+
+                    <!-- OUTER CIRCLE: WHAT / O QUÊ -->
+                    <g id="g-what" class="cursor-pointer transition-all duration-300 transform hover:scale-[1.01]" onclick="selectLayer('what')">
+                        <circle cx="200" cy="200" r="185" fill="url(#grad-what)" stroke="#6366f1" stroke-width="2.5" class="transition-all duration-300" id="circle-what" />
+                        <text x="200" y="45" text-anchor="middle" fill="#a5b4fc" class="text-[11px] font-extrabold uppercase tracking-widest pointer-events-none">O QUÊ (WHAT)</text>
+                    </g>
+
+                    <!-- MIDDLE CIRCLE: HOW / COMO -->
+                    <g id="g-how" class="cursor-pointer transition-all duration-300 transform hover:scale-[1.02]" onclick="selectLayer('how')">
+                        <circle cx="200" cy="200" r="125" fill="url(#grad-how)" stroke="#06b6d4" stroke-width="2.5" class="transition-all duration-300" id="circle-how" />
+                        <text x="200" y="100" text-anchor="middle" fill="#a5f3fc" class="text-[11px] font-extrabold uppercase tracking-widest pointer-events-none">COMO (HOW)</text>
+                    </g>
+
+                    <!-- INNER CIRCLE: WHY / PORQUÊ -->
+                    <g id="g-why" class="cursor-pointer transition-all duration-300 transform hover:scale-[1.03]" onclick="selectLayer('why')">
+                        <circle cx="200" cy="200" r="65" fill="url(#grad-why)" stroke="#f59e0b" stroke-width="2" class="transition-all duration-300" id="circle-why" />
+                        <!-- Core Icon Lightbulb inside the center circle -->
+                        <g transform="translate(182, 172) scale(0.07)" class="pointer-events-none" fill="#ffffff">
+                            <path d="M256 0C161.5 0 84.7 76.8 84.7 171.3c0 51.1 22.4 96.9 57.9 128.7l5 4.5c15.1 13.5 24.3 32.8 25.3 53.6l1.4 30c1.1 23 19.8 41.1 42.8 41.1h77.8c23 0 41.7-18.1 42.8-41.1l1.4-30c1-20.8 10.2-40.1 25.3-53.6l5-4.5c35.5-31.8 57.9-77.6 57.9-128.7C427.3 76.8 350.5 0 256 0zm38.4 384H217.6c-5.3 0-9.6-4.3-9.6-9.6s4.3-9.6 9.6-9.6h76.8c5.3 0 9.6 4.3 9.6 9.6s-4.3 9.6-9.6 9.6zm16-48H193.6c-5.3 0-9.6-4.3-9.6-9.6s4.3-9.6 9.6-9.6h116.8c5.3 0 9.6 4.3 9.6 9.6s-4.3 9.6-9.6 9.6z"/>
+                        </g>
+                        <text x="200" y="240" text-anchor="middle" fill="#ffffff" class="text-[12px] font-black uppercase tracking-wider pointer-events-none">PORQUÊ</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Layer Selection Buttons (For visual aid and direct control) -->
+            <div class="grid grid-cols-3 gap-2 mt-6 w-full">
+                <button onclick="selectLayer('why')" id="btn-why" class="px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-amber-500/10 border-amber-500/40 text-amber-300 hover:bg-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span> Porquê
+                </button>
+                <button onclick="selectLayer('how')" id="btn-how" class="px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Como
+                </button>
+                <button onclick="selectLayer('what')" id="btn-what" class="px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span> O quê
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Side: Pedagogical Detail Panel (Col 1 to Col 7) -->
+        <div class="lg:col-span-7 flex flex-col gap-6 w-full">
+            
+            <!-- Detail Card -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden transition-all duration-500 min-h-[380px] flex flex-col justify-between">
+                
+                <!-- Background Glowing effect matching the state -->
+                <div id="card-glow" class="absolute -right-32 -top-32 w-80 h-80 rounded-full bg-amber-500/10 blur-[80px] transition-all duration-500 pointer-events-none"></div>
+
+                <div>
+                    <!-- Breadcrumb/Status -->
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="detail-tag" class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            Propósito Central
+                        </span>
+                        <div class="flex gap-1 text-slate-500">
+                            <span class="w-2 h-2 rounded-full bg-amber-500" id="dot-why"></span>
+                            <span class="w-2 h-2 rounded-full bg-slate-700" id="dot-how"></span>
+                            <span class="w-2 h-2 rounded-full bg-slate-700" id="dot-what"></span>
+                        </div>
+                    </div>
+
+                    <!-- Title & Subtitle -->
+                    <h3 id="detail-title" class="text-2xl md:text-3xl font-extrabold text-white tracking-tight transition-all duration-300">
+                        Por que precisamos do RAG?
+                    </h3>
+                    <p id="detail-subtitle" class="text-slate-400 text-sm mt-1 mb-6 italic transition-all duration-300">
+                        "As pessoas não compram o que você faz, elas compram o porquê de você fazer."
+                    </p>
+
+                    <!-- Interactive Bullet Points -->
+                    <div id="detail-bullets" class="space-y-4 transition-all duration-300">
+                        <!-- Bullets are loaded dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Teacher Pedagogical Hack Box -->
+                <div id="teacher-box" class="mt-8 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/90 flex gap-3 items-start transition-all duration-300">
+                    <i class="fa-solid fa-chalkboard-user text-lg text-amber-400 mt-0.5"></i>
+                    <div>
+                        <strong class="text-amber-300 block mb-1">Dica de Didática (Professor Premiado):</strong>
+                        <span id="teacher-quote">Nas aulas de redes, mostre que o "Porquê" resolve o desespero do aluno de receber configurações geradas por IAs comuns que simplesmente não funcionam ou "alucinam" interfaces que não existem no hardware real.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Demonstration Widget -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-circle-play text-emerald-400"></i>
+                        Simulador de RAG em Tempo Real
+                    </h4>
+                    <span class="text-[10px] text-slate-500 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Clique para testar</span>
+                </div>
+
+                <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 text-xs font-mono space-y-3 relative overflow-hidden min-h-[140px] flex flex-col justify-center">
+                    
+                    <!-- Simulation States -->
+                    <div id="sim-idle" class="flex flex-col items-center justify-center py-4 text-slate-500">
+                        <i class="fa-solid fa-server text-3xl mb-2 text-slate-700"></i>
+                        <p>Deseja ver o fluxo de dados em ação na topologia CML2?</p>
+                        <button onclick="runSimulation()" class="mt-3 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-sans font-semibold transition-all duration-200 flex items-center gap-1.5">
+                            Simular Busca RAG <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 1: Query -->
+                    <div id="sim-step1" class="hidden space-y-1">
+                        <div class="text-indigo-400 flex justify-between"><span>[1/3] USUÁRIO FAZ PERGUNTA:</span><span class="text-slate-500">Input</span></div>
+                        <p class="text-white">"Como configuro o protocolo OSPF nos roteadores IOS-XE?"</p>
+                        <p class="text-slate-500 text-[10px]">-> Processando vetorização semântica...</p>
+                    </div>
+
+                    <!-- Step 2: Retrieval (HOW) -->
+                    <div id="sim-step2" class="hidden space-y-1">
+                        <div class="text-cyan-400 flex justify-between"><span>[2/3] RECUPERAÇÃO DE DADOS (RETRIEVAL):</span><span class="text-slate-500">Busca Vetorial</span></div>
+                        <p class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Encontrado no Manual de Redes Cisco do Academy Days 2026!</p>
+                        <p class="text-slate-300 italic">"Contexto Injetado: router ospf 1 -> network 10.0.0.0 0.0.0.255 area 0"</p>
+                    </div>
+
+                    <!-- Step 3: Generation (WHAT) -->
+                    <div id="sim-step3" class="hidden space-y-1">
+                        <div class="text-amber-400 flex justify-between"><span>[3/3] GERAÇÃO DA RESPOSTA (GENERATION):</span><span class="text-slate-500">LLM Aumentada</span></div>
+                        <p class="text-white font-semibold">Configuração gerada baseada inteiramente no arquivo de referência oficial:</p>
+                        <pre class="text-slate-400 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">R1(config)# router ospf 1
+R1(config-router)# network 10.1.1.0 0.0.0.3 area 0</pre>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/80 px-6 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <p>© 2026 Cisco Academy Days - Inovação em Ensino de Redes.</p>
+            <div class="flex gap-4">
+                <a href="https://github.com/CiscoLearning/CiscoU.-Workshop/tree/in-person" target="_blank" class="hover:text-indigo-400 transition-colors flex items-center gap-1">
+                    <i class="fa-brands fa-github text-sm"></i> Repositório Cisco Learning
+                </a>
+                <span>|</span>
+                <span class="text-slate-400">"Golden Circle do RAG"</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        // Data containing details for Simon Sinek's RAG Golden Circle
+        const goldenCircleData = {
+            why: {
+                title: "Por que precisamos do RAG?",
+                subtitle: "O Propósito, a Crença Central, a Causa da Existência",
+                tag: "Propósito Central",
+                colorClass: "amber",
+                glow: "rgba(245, 158, 11, 0.2)",
+                bullets: [
+                    {
+                        title: "Eliminar a Alucinação Técnica",
+                        desc: "Modelos de linguagem tradicionais mentem ou inventam comandos e portas em redes. O RAG restringe a IA a responder baseada apenas nos fatos fornecidos."
+                    },
+                    {
+                        title: "Precisão Cirúrgica em Ambientes de Produção",
+                        desc: "Permite usar a IA para criar configurações críticas e scripts Netmiko sabendo que a referência de dados é real (ex: Manuais Cisco IOS-XE)."
+                    },
+                    {
+                        title: "Conectar Dados Privados e Atualizados",
+                        desc: "As IAs públicas não sabem o que é a sua rede local ou sua topologia específica no CML2. O RAG traz o contexto do seu laboratório privado para a IA."
+                    }
+                ],
+                teacher: "Nas aulas de redes, mostre que o 'Porquê' resolve o desespero do aluno de receber configurações geradas por IAs comuns que simplesmente não funcionam ou inventam comandos desatualizados."
+            },
+            how: {
+                title: "Como o RAG faz isso acontecer?",
+                subtitle: "O Processo de Execução, as Ações Práticas, as Tecnologias",
+                tag: "O Processo Prático",
+                colorClass: "cyan",
+                glow: "rgba(6, 182, 212, 0.2)",
+                bullets: [
+                    {
+                        title: "1. Busca e Indexação Inteligente (Retrieval)",
+                        desc: "Quando o usuário faz uma pergunta, o sistema converte a pergunta em vetores matemáticos e faz uma busca semântica em manuais e documentos de rede salvos."
+                    },
+                    {
+                        title: "2. Aumento de Contexto (Augmented)",
+                        desc: "Os trechos de manuais mais relevantes encontrados na busca são envelopados/injetados diretamente dentro do prompt que é enviado para a IA."
+                    },
+                    {
+                        title: "3. Redirecionamento de Escopo",
+                        desc: "Instrui-se o modelo: 'Use estritamente as regras técnicas do documento fornecido para montar o script IOS-XE. Se não achar no documento, diga que não sabe.'"
+                    }
+                ],
+                teacher: "Para ensinar o 'Como', use ferramentas gratuitas de RAG fáceis de utilizar como o NotebookLM. Coloque PDFs com manuais da Cisco, roteiros do workshop e deixe a IA simular as consultas."
+            },
+            what: {
+                title: "O que o RAG produz na prática?",
+                subtitle: "O Resultado Tangível, o Produto Final, o Script Funcionando",
+                tag: "O Produto Final",
+                colorClass: "indigo",
+                glow: "rgba(99, 102, 241, 0.2)",
+                bullets: [
+                    {
+                        title: "Aplicações de Rede Altamente Confiáveis",
+                        desc: "Um assistente que cria comandos IOS-XE funcionais de primeira, planeja e valida topologias no CML2 de forma 100% aderente às boas práticas corporativas."
+                    },
+                    {
+                        title: "Scripts Automatizados Sem Erros de Sintaxe",
+                        desc: "Geração sob demanda de código Python (Netmiko/RESTCONF), chamadas de API bem estruturadas e prontos para rodar no laboratório do workshop."
+                    },
+                    {
+                        title: "Automação via Agentes Inteligentes (MCP)",
+                        desc: "O modelo traduz a documentação de rede diretamente em ações reais nos roteadores através de ferramentas como o Claude Desktop e o Model Context Protocol (MCP)."
+                    }
+                ],
+                teacher: "O 'O quê' é o laboratório entregue com sucesso! Com RAG, os alunos gastam menos tempo frustrados com sintaxes quebradas e mais tempo entendendo as conexões e os fluxos de rede."
+            }
+        };
+
+        let currentActive = 'why';
+
+        // Function to select and render a layer of the Golden Circle
+        function selectLayer(layerKey) {
+            currentActive = layerKey;
+            const data = goldenCircleData[layerKey];
+
+            // 1. Update active states on the SVG
+            const layers = ['why', 'how', 'what'];
+            layers.forEach(l => {
+                const circle = document.getElementById(`circle-${l}`);
+                const btn = document.getElementById(`btn-${l}`);
+                const dot = document.getElementById(`dot-${l}`);
+
+                if (l === layerKey) {
+                    // Active Styling
+                    circle.setAttribute('stroke-width', '4.5');
+                    circle.classList.add('pulse-active');
+                    if (l === 'why') {
+                        circle.setAttribute('filter', 'url(#glow-why)');
+                        btn.className = "px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-amber-500/10 border-amber-500 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.2)]";
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-500";
+                    } else if (l === 'how') {
+                        circle.setAttribute('filter', 'url(#glow-how)');
+                        btn.className = "px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-cyan-500/10 border-cyan-500 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.2)]";
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-cyan-500";
+                    } else {
+                        circle.setAttribute('filter', 'url(#glow-what)');
+                        btn.className = "px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-indigo-500/10 border-indigo-500 text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.2)]";
+                        dot.className = "w-2.5 h-2.5 rounded-full bg-indigo-500";
+                    }
+                } else {
+                    // Inactive Styling
+                    circle.setAttribute('stroke-width', '2.5');
+                    circle.removeAttribute('filter');
+                    circle.classList.remove('pulse-active');
+                    btn.className = "px-3 py-2 rounded-xl text-xs font-semibold border transition-all duration-200 flex items-center justify-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700";
+                    dot.className = "w-2 h-2 rounded-full bg-slate-700";
+                }
+            });
+
+            // 2. Update Details Panel Content with elegant transition
+            const panelTitle = document.getElementById('detail-title');
+            const panelSubtitle = document.getElementById('detail-subtitle');
+            const panelTag = document.getElementById('detail-tag');
+            const panelBullets = document.getElementById('detail-bullets');
+            const cardGlow = document.getElementById('card-glow');
+            const teacherBox = document.getElementById('teacher-box');
+            const teacherQuote = document.getElementById('teacher-quote');
+
+            // Apply quick fade out
+            panelTitle.style.opacity = '0';
+            panelSubtitle.style.opacity = '0';
+            panelBullets.style.opacity = '0';
+
+            setTimeout(() => {
+                // Change Data
+                panelTitle.innerText = data.title;
+                panelSubtitle.innerText = data.subtitle;
+                panelTag.innerText = data.tag;
+                teacherQuote.innerText = data.teacher;
+
+                // Color themes
+                if (layerKey === 'why') {
+                    panelTag.className = "text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                    cardGlow.className = "absolute -right-32 -top-32 w-80 h-80 rounded-full bg-amber-500/10 blur-[80px] pointer-events-none";
+                    teacherBox.className = "mt-8 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/90 flex gap-3 items-start";
+                } else if (layerKey === 'how') {
+                    panelTag.className = "text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30";
+                    cardGlow.className = "absolute -right-32 -top-32 w-80 h-80 rounded-full bg-cyan-500/10 blur-[80px] pointer-events-none";
+                    teacherBox.className = "mt-8 p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-200/90 flex gap-3 items-start";
+                } else {
+                    panelTag.className = "text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+                    cardGlow.className = "absolute -right-32 -top-32 w-80 h-80 rounded-full bg-indigo-500/10 blur-[80px] pointer-events-none";
+                    teacherBox.className = "mt-8 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-200/90 flex gap-3 items-start";
+                }
+
+                // Render bullets
+                panelBullets.innerHTML = data.bullets.map((b, i) => `
+                    <div class="flex gap-3.5 items-start">
+                        <div class="flex items-center justify-center w-6 h-6 rounded-lg bg-${layerKey === 'why' ? 'amber' : layerKey === 'how' ? 'cyan' : 'indigo'}-500/15 text-${layerKey === 'why' ? 'amber' : layerKey === 'how' ? 'cyan' : 'indigo'}-400 text-xs font-bold mt-0.5 border border-${layerKey === 'why' ? 'amber' : layerKey === 'how' ? 'cyan' : 'indigo'}-500/20">
+                            ${i + 1}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm tracking-wide">${b.title}</h4>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">${b.desc}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Fade back in
+                panelTitle.style.opacity = '1';
+                panelSubtitle.style.opacity = '1';
+                panelBullets.style.opacity = '1';
+            }, 150);
+        }
+
+        // RAG Live Simulator Functionality
+        function runSimulation() {
+            const idle = document.getElementById('sim-idle');
+            const step1 = document.getElementById('sim-step1');
+            const step2 = document.getElementById('sim-step2');
+            const step3 = document.getElementById('sim-step3');
+
+            // Set layout for step 1
+            idle.classList.add('hidden');
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden');
+
+            // Force interaction highlight to 'WHY' (Why are they asking?)
+            selectLayer('why');
+
+            // Step 2 starts
+            setTimeout(() => {
+                step1.classList.add('opacity-40');
+                step2.classList.remove('hidden');
+                // Highlight HOW during retrieval
+                selectLayer('how');
+                
+                // Step 3 starts
+                setTimeout(() => {
+                    step2.classList.add('opacity-40');
+                    step3.classList.remove('hidden');
+                    // Highlight WHAT during generation
+                    selectLayer('what');
+
+                    // Reset option
+                    setTimeout(() => {
+                        const resetBtn = document.createElement('button');
+                        resetBtn.innerText = "Reiniciar Simulador";
+                        resetBtn.className = "mt-2 self-start text-[10px] text-indigo-400 hover:text-indigo-300 font-sans font-bold flex items-center gap-1";
+                        resetBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Reiniciar`;
+                        resetBtn.onclick = () => {
+                            idle.classList.remove('hidden');
+                            step1.classList.add('hidden');
+                            step2.classList.add('hidden');
+                            step3.classList.add('hidden');
+                            step1.classList.remove('opacity-40');
+                            step2.classList.remove('opacity-40');
+                            selectLayer('why');
+                        };
+                        step3.appendChild(resetBtn);
+                    }, 500);
+
+                }, 2000);
+            }, 1800);
+        }
+
+        // Initialize state on load
+        window.onload = function() {
+            selectLayer('why');
+        }
+    </script>
+</body>
+</html>
