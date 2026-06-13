@@ -1,0 +1,18 @@
+{                                                                                                                                                                                              
+  "mcpServers": {                                                                                                                                                                              
+    "cml": {                                                                                                                                                                                   
+      "command": "/home/moises/.local/bin/uvx",                                                                                                                                                
+      "args": [                                                                                                                                                                                
+        "cml-mcp[pyats]"                                                                                                                                                                       
+      ],                                                                                                                                                                                       
+      "env": {                                                                                                                                                                                 
+        "CML_URL": "https://10.10.14.76",                                                                                                                                              
+        "CML_USERNAME": "admin",                                                                                                                                                   
+        "CML_PASSWORD": "Cml2@123",                                                                                                                                                     
+        "CML_VERIFY_SSL": "false",                                                                                                                                                             
+        "PYATS_USERNAME": "admin",                                                                                                                                
+        "PYATS_PASSWORD": "Cml2@123"                                                                                                                                   
+      }                                                                                                                                                                                        
+    }                                                                                                                                                                                          
+  }                                                                                                                                                                                            
+}                    
