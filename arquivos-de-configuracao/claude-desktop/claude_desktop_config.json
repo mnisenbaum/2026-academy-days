@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "Cisco Modeling Labs (CML)": {
+      "command": "wsl",
+      "args": [
+        "bash",
+        "-c",
+        "CML_URL='https://10.10.14.121/' CML_USERNAME='admin' CML_PASSWORD='Cml2@123' CML_VERIFY_SSL='false' /home/moises/.local/bin/uvx cml-mcp[pyats]"
+      ]
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\conta\\Claude",
+  "preferences": {
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
+    "bypassPermissionsGateByAccount": {
+      "3dac606f-322c-4157-96e0-bcf653693e63": false
+    },
+    "coworkWebSearchEnabled": true,
+    "coworkModelAutoFallbackByAccount": {
+      "3dac606f-322c-4157-96e0-bcf653693e63": true
+    },
+    "remoteToolsDeviceName": "acer-man",
+    "epitaxyPrefs": {
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [],
+      "starred-session-groups": [],
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "customGroupAssignments": {},
+        "customGroupOrder": {}
+      }
+    },
+    "coworkHipaaRestricted": false
+  }
+}
