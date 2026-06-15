@@ -1,0 +1,6 @@
+Atue como Engenheiro de Automação de Redes. O ambiente atual está limpo. Execute as etapas abaixo de forma estritamente sequencial[cite: 140]:
+
+1. Preparação: Instale o gerenciador de pacotes uv, uvs, pipx e tudo que for necessário, clone o repositório do servidor MCP para CML (cml-mcp) e instale as dependências via uv sync[cite: 141]. Não esqueça do pyats[cite: 142].
+2. Configuração: Defina as variáveis de ambiente necessárias (CML_URL, CML_USERNAME, CML_PASSWORD, etc.)[cite: 143]. 
+3. Conexão: Inicialize o servidor MCP no seu contexto para expor as ferramentas da API do CML2[cite: 144].
+4. Validação: Crie um laboratório de teste vazio chamado 'Teste Opencode' para validar a conectividade antes de provisionar a topologia de rede final.
