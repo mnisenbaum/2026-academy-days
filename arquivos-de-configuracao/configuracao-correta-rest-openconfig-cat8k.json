@@ -1,0 +1,35 @@
+{
+  "openconfig-interfaces:interface": {
+    "name": "Loopback103",
+    "config": {
+      "name": "Loopback103",
+      "type": "iana-if-type:softwareLoopback",
+      "enabled": true,
+      "description": "Configured via RESTCONF and OpenConfig models"
+    },
+    "subinterfaces": {
+      "subinterface": [
+        {
+          "index": 0,
+          "config": {
+            "index": 0,
+            "enabled": true
+          },
+          "openconfig-if-ip:ipv4": {
+            "addresses": {
+              "address": [
+                {
+                  "ip": "192.0.3.103",
+                  "config": {
+                    "ip": "192.0.3.103",
+                    "prefix-length": 32
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
