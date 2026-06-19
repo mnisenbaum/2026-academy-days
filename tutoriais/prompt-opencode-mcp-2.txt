@@ -1,0 +1,17 @@
+Atue como Engenheiro de Automação de Redes. O ambiente atual está limpo. Execute as etapas abaixo de forma estritamente sequencial[cite: 140]:
+
+1. Preparação: Instale o gerenciador de pacotes uv, uvs, pipx e tudo que for necessário, clone o repositório do servidor MCP para CML (cml-mcp) e instale as dependências via uv sync[cite: 141]. Não esqueça do pyats[cite: 142].
+2. Configuração: Defina as variáveis de ambiente necessárias (CML_URL, CML_USERNAME, CML_PASSWORD, etc.)[cite: 143]. 
+3. Conexão: Inicialize o servidor MCP no seu contexto para expor as ferramentas da API do CML2[cite: 144].
+4. Validação: Crie um laboratório de teste vazio chamado 'Teste Opencode' para validar a conectividade antes de provisionar a topologia de rede final.
+
+
+
+
+Faça o planejamento da criação de um lab no CML2 via MCP
+1. Criar um laboratório com o nome "opencode-MCP-externo"
+2. Adicionar 4 routers IOL-xe formando os vértices de um quadrado
+3. Conectar os roteadores de modo que os links são os vértices do quadrado
+4. O endereçamento IP dos links será 10.x.y.0/24 onde x < y são os números dos roteadores conectados
+5. Crie uma interface loopback em cada roteador com o endereço x.x.x.x/24 onde x é o número do roteador
+6. Levante o OSPF em todos os routers e anuncie todos links.
