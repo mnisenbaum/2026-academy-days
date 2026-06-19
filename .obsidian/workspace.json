@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "prompts/exemplos-de-prompt.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -183,9 +183,22 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "259687fd5fb639ce",
+  "active": "2221c6c18d68fd5b",
   "lastOpenFiles": [
-    "prompts/exemplos-de-prompt.md",
-    "Lab-01.md"
+    "Labs resolvidos/Lab06-SDK-CML2/versao_2/restconf_client.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_2/Não confirmado 421310.crdownload",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_2",
+    "Labs resolvidos/Lab06-SDK-CML2/Nova pasta",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/verifica_ospf2.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/verifica_ospf.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/inspect_topology.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/fix_configs.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/cml_opencode_sdk.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1/check_nodes.py",
+    "Labs resolvidos/Lab06-SDK-CML2/versao_1",
+    "Lab-03.md",
+    "Lab-02.md",
+    "Lab-01.md",
+    "prompts/exemplos-de-prompt.md"
   ]
 }

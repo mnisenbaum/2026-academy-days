@@ -30,3 +30,16 @@ wr
 Tenho essa topologia com o endereçamento IP conforme as instruções. Conseguimos acessar o R1 usando o ip: 10.10.14.69 Credenciais: admin / admin com priv 15. Todos os roteadores têm as mesmas credenciais e devem ser acessados via loopback 2.2.2.2 (R2), 3.3.3.3 (R3), etc. Crie um script python usando a biblioteca Netmiko que configure as "descriptions" de todas interfaces de todos roteadores. Para isso, acesse R1 por SSH, de R1 acesse R2, de R2 acesse R3 e de R3 acesse R4. A descrição deverá seguir o modelo: "Link de Rx para Ry" ou "Loopback de Rx"
 Ficou alguma dúvida?
 ```
+
+# Lab 05
+
+```
+Você é especialista cisco, desenvolvedor, python e exelente professor.
+Em anexo estão as configurações do Bruno para acessar roteador cat8000v no devnet.
+Crie um script python que faça o seguinte
+1. Pergunte a url e credenciais do roteador
+2. Apresente um menu que faça TODAS as chamadas contidas no arquivo anexo.
+3. Mostre os resultados
+4. Mostre cada chamada API que foi feita: URL e Body
+```
+
